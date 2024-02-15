@@ -7,7 +7,7 @@ services:
     ports:
       - "80:80"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_HOST=database-2.c1u8coi0q5p3.eu-west-1.rds.amazonaws.com
-      - POSTGRES_DATABASE_NAME=sample
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST=
+      - POSTGRES_DATABASE_NAME=

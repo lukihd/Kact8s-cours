@@ -38,7 +38,7 @@ L'utilisateur de base sur EC2 est ec2-user, vous devrez vous connecter dessus av
 
 - Copier les fichiers de l'application dans le dossier home de l'utilisateur ec2-user
 - Se connecter à l'instance en SSH
-- Renseigner les variables d'environnement de l'application (fichier python) dans la VM avec les informations de la DB
+- Renseigner les variables d'environnement de l'application (fichier docker-compose.yml) dans la VM avec les informations de la DB
 - Installer Docker et Docker compose (Amazon linux est basé sur CentOS donc c'est yum le package manager)
 - Se connecter par le navigateur à l'IP de la VM et vérifier que ça fonctionne
 
@@ -57,4 +57,3 @@ Déployer un load balancer applicatif pour créer de la redondance entre les VMs
 - Spécifier un security group qui accepte depuis internet (inbound) le port 80
 - Spécifier le target group créé précédemment dans `listener and routing` sur le port 80
 - N'ajoutez pas les services WAF et Global accelerator
-  
