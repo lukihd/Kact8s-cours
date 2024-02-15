@@ -1,0 +1,13 @@
+version: "1"
+
+services:
+  count:
+    build: ./
+    command: python app.py
+    ports:
+      - "80:80"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=database-2.c1u8coi0q5p3.eu-west-1.rds.amazonaws.com
+      - POSTGRES_DATABASE_NAME=sample
