@@ -41,3 +41,20 @@ L'utilisateur de base sur EC2 est ec2-user, vous devrez vous connecter dessus av
 - Renseigner les variables d'environnement de l'application (fichier python) dans la VM avec les informations de la DB
 - Installer Docker et Docker compose (Amazon linux est basé sur CentOS donc c'est yum le package manager)
 - Se connecter par le navigateur à l'IP de la VM et vérifier que ça fonctionne
+
+## Haute disponibilité
+
+Reproduire la création d'une VM et la mise en place du site dans une seconde VM avec le security group de la première (permettra d'avoir accès à la DB).
+
+Modifiez le code HTML de l'app sur la balise <h1>CRUD App</h1> en ajoutant un nom différent sur chaque VM.
+
+Target group permettant de cibler une liste d'instance sur lesquels le load balancer agira :
+
+- Créer un target group avec les instances existantes.
+
+Déployer un load balancer applicatif pour créer de la redondance entre les VMs :
+- Sélectionner internet facing ip v4
+- Spécifier un security group qui accepte depuis internet (inbound) le port 80
+- Spécifier le target group créé précédemment dans `listener and routing` sur le port 80
+- N'ajoutez pas les services WAF et Global accelerator
+  
