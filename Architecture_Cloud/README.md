@@ -32,17 +32,19 @@
     - [Fonctionnement de Terraform](#fonctionnement-de-terraform)
     - [Créer une ressources dans terraform](#créer-une-ressources-dans-terraform)
     - [TP 2 : Déployer une infrastructure redondée et haute disponibilité avec Terraform](#tp-2--déployer-une-infrastructure-redondée-et-haute-disponibilité-avec-terraform)
-    - [4.3. Le pilier de la Sécurité](#43-le-pilier-de-la-sécurité)
-    - [4.4. Services de sécurité d'AWS](#44-services-de-sécurité-daws)
+  - [6. La sécurité dans le Cloud](#6-la-sécurité-dans-le-cloud)
+    - [6.1. Le pilier de la Sécurité](#61-le-pilier-de-la-sécurité)
+    - [6.2. Services de sécurité d'AWS](#62-services-de-sécurité-daws)
     - [TP 2 : Suite, on ajoute de la sécurité](#tp-2--suite-on-ajoute-de-la-sécurité)
-  - [3. Le métier d'Architecte Cloud](#3-le-métier-darchitecte-cloud)
-    - [3.1. C'est quoi le job d'un Architecte Cloud](#31-cest-quoi-le-job-dun-architecte-cloud)
-    - [3.2. Pas mal de politique quand même](#32-pas-mal-de-politique-quand-même)
-    - [3.3. Et t'es payé combien ?](#33-et-tes-payé-combien--1)
-    - [3.2. Les outils de l'Architecte Cloud](#32-les-outils-de-larchitecte-cloud)
-  - [Comprendre un besoin](#comprendre-un-besoin)
-    - [Pilier sustainability](#pilier-sustainability)
-    - [Pilier finops](#pilier-finops)
+  - [7. Le métier d'Architecte Cloud](#7-le-métier-darchitecte-cloud)
+    - [7.1. C'est quoi le job d'un Architecte Cloud](#71-cest-quoi-le-job-dun-architecte-cloud)
+    - [7.2. Pas mal de politique quand même](#72-pas-mal-de-politique-quand-même)
+    - [7.3. Et t'es payé combien ?](#73-et-tes-payé-combien-)
+    - [7.2. Les outils de l'Architecte Cloud](#72-les-outils-de-larchitecte-cloud)
+  - [8 Comprendre un besoin client en tant qu'Architecte Cloud](#8-comprendre-un-besoin-client-en-tant-quarchitecte-cloud)
+    - [8.1 Pilier sustainability](#81-pilier-sustainability)
+    - [8.2 Pilier finops](#82-pilier-finops)
+    - [TP 3 : Répondre à une besoin client en tant qu'Architecte et fournir une solution technique à ce besoin](#tp-3--répondre-à-une-besoin-client-en-tant-quarchitecte-et-fournir-une-solution-technique-à-ce-besoin)
 
 (Jour 1)
 ## 1. Le Cloud Computing c'est quoi ?
@@ -154,9 +156,9 @@ ECS ou Elastic Container Service est les service de conteneur à la demande d'AW
 Les fonctions ou Lambda chez AWS sont sûrement quelque chose dont vous n'avez jamais entendu parler. Une Lambda c'est un script ou un bout de code exécuté en parallèle par des dizaines, centaines ou milliers de processus. Les fonctions sont très intéressantes pour du traitement de fichier comme des OCR ou pour scaler facilement des appels API. Cet outil est surtout utilisé lorsqu'une application est développée pour fonctionner avec le CSP et d'exploiter ses pleines capacités. Il existe donc des applications comme Amazon Prime Vidéo qui fonctionnaient principalement avec les Lambda mais depuis peu ils ont décidés de changer de paradigme de développement dû au coût élever des Lambda à cette échelle.
 
 ### TP 1 : Monter un site web
--> Monter une petite architecture basique db web code déjà fourni juste à installer nginx ect et ça tourne (à réfléchir) 
 
-(Jour 2-3)
+[TP1](./tp1/README.md)
+
 ## 3. Le métier d'Ingénieur Cloud
 ### 3.1. C'est quoi le job d'un Ingénieur Cloud
 
@@ -318,17 +320,21 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
 
 ### TP 2 : Déployer une infrastructure redondée et haute disponibilité avec Terraform
 
-(Jour 3)
-### 4.3. Le pilier de la Sécurité
-### 4.4. Services de sécurité d'AWS
-### TP 2 : Suite, on ajoute de la sécurité
-## 3. Le métier d'Architecte Cloud
-### 3.1. C'est quoi le job d'un Architecte Cloud
-### 3.2. Pas mal de politique quand même
-### 3.3. Et t'es payé combien ?
-### 3.2. Les outils de l'Architecte Cloud
+[TP2](./tp2/README.md)
 
-## Comprendre un besoin
-### Pilier sustainability
-### Pilier finops
+## 6. La sécurité dans le Cloud
+### 6.1. Le pilier de la Sécurité
+### 6.2. Services de sécurité d'AWS
+### TP 2 : Suite, on ajoute de la sécurité
+## 7. Le métier d'Architecte Cloud
+### 7.1. C'est quoi le job d'un Architecte Cloud
+### 7.2. Pas mal de politique quand même
+### 7.3. Et t'es payé combien ?
+### 7.2. Les outils de l'Architecte Cloud
+
+## 8 Comprendre un besoin client en tant qu'Architecte Cloud
+### 8.1 Pilier sustainability
+### 8.2 Pilier finops
+
+### TP 3 : Répondre à une besoin client en tant qu'Architecte et fournir une solution technique à ce besoin 
 
