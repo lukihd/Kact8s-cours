@@ -26,9 +26,12 @@
     - [3.2. Les outils de l'Ingénieur Cloud](#32-les-outils-de-lingénieur-cloud)
   - [4 Le Well-Architected Framework l'outil premier de l'Ingénieur Cloud](#4-le-well-architected-framework-loutil-premier-de-lingénieur-cloud)
     - [4.1. Le pilier Operational Excellence](#41-le-pilier-operational-excellence)
-    - [4.2. Le pilier de la Fiabilité](#42-le-pilier-de-la-fiabilité)
+    - [4.2. Le pilier Reliability](#42-le-pilier-reliability)
   - [5. Infrastructure as Code](#5-infrastructure-as-code)
-    - [TP 2 : Passer d'un schéma d'architecture au déploiement de l'app](#tp-2--passer-dun-schéma-darchitecture-au-déploiement-de-lapp)
+    - [Avantages de l'Infrastructure as Code](#avantages-de-linfrastructure-as-code)
+    - [Fonctionnement de Terraform](#fonctionnement-de-terraform)
+    - [Créer une ressources dans terraform](#créer-une-ressources-dans-terraform)
+    - [TP 2 : Déployer une infrastructure redondée et haute disponibilité avec Terraform](#tp-2--déployer-une-infrastructure-redondée-et-haute-disponibilité-avec-terraform)
     - [4.3. Le pilier de la Sécurité](#43-le-pilier-de-la-sécurité)
     - [4.4. Services de sécurité d'AWS](#44-services-de-sécurité-daws)
     - [TP 2 : Suite, on ajoute de la sécurité](#tp-2--suite-on-ajoute-de-la-sécurité)
@@ -190,17 +193,135 @@ Il nous apporte les concepts clés et les bonnes pratiques d'une infrastructure 
 
 ### 4.1. Le pilier Operational Excellence
 
+Le pilier Operational Excellence implique le fait de créer son infrastructure en utilisant les bonnes pratiques du CSP et de délivrer la meilleure expérience utilisateur. Il défini comment s'organiser, réfléchir son infrastructure, la scaler et la faire évoluer dans le temps.
+On peut l'apparenter au principe DevOps d'amélioration continue. L'objectif avec ce pilier est de déployer des nouvelles fonctionnalités ou bug fix le plus rapidement et de façon sûr. 
 
+Les objectifs du pilier :
 
-### 4.2. Le pilier de la Fiabilité
+**Faire de l'operations as code :** De la même façon que les développeurs codent leurs applications il en va de même pour l'infrastructure. On peut développer l'ensemble de l'infrastructure grâce à des outils comme Terraform pour pouvoir automatiser le déploiement et mettre à jour depuis le code. Grâce à l'Infrastructure as Code on réduit les erreurs humaines.
+
+**Effectuez des modifications fréquentes, légères et réversibles :** Faire en sorte que l'infrastructure soit évolutive pour permettre une mise à jour indépendante de chaque composant. En automatisant les déploiement avec une CI/CD lors de modification mineures et incrémentielle on améliore le flux de déploiement et simplifie le rollback en cas de problème. On accroît ainsi la confiance dans l'infrastructure en prouvant la capacité à réagir rapidement aux besoins ou aux adversités imposée sur l'infrastructure.
+
+**Améliorer régulièrement les procédures opérationnelles :** Faites évoluer vos procédures en fonction des changements que subissent vos workload. Tout en utilisant des procédures opérationnelles, cherchez le moyen de les améliorer. Passez régulièrement en revue les procédures et assurez-vous qu'elles sont efficaces et maîtrisées par les équipes. Lorsque des lacunes sont identifiées, actualisez les procédures en conséquence. Communiquez les mises à jour des procédures à toutes les parties prenantes et équipes.
+
+**Anticiper les pannes :** Effectuez des exercices afin d'identifier les causes possibles de panne et de les supprimer ou de les atténuer. Testez vos scénarios de pannes et confirmez votre compréhension de leur impact. Testez vos procédures de réponse pour vous assurer qu'elles sont efficaces et que les équipes sont familiarisées avec leur exécution. Planifiez des simulations de pannes pour tester la capacité à traiter ces problèmes. 
+
+**Utiliser des services managés :** Utiliser des ressources ou services managés par le CSP afin de réduire la charge opérationnelle des équipes.
+
+**Monitorer efficacement :** Monitorer l'infrastructure afin d'en ressortir des informations exploitables pour maintenir le service et réagir en cas de pannes ou de problèmes. Faites-vous une idée précise du comportement, des performances, de la fiabilité, des coûts et de l'état de la charge de travail.
+
+### 4.2. Le pilier Reliability
+
+Le pilier Reliability fait référence à la fiabilité de l'infrastructure et de ses workloads (application, services, vm, ...). Ce pilier à pour but de nous apporter les bonnes pratiques lors de la réflexion des schéma d'architecture et lors de la mise en place de celle-ci.
+
+**Redéploiement automatique après une panne :** En contrôlant les indicateurs clés de performance d'un workload, vous pouvez déclencher l'automatisation en cas de transgression d'un seuil. Cela permet la création de notifications automatiques, le suivi des pannes et l'exécution de processus de récupération automatique qui contournent ou corrigent les pannes. Une automatisation plus sophistiquée rend possible l'anticipation et la correction des pannes avant qu'elles ne se produisent. 
+
+**Scaling horizontal :** Répartir la charge de la ressources sur plusieurs plus petites ressources pour ne pas créer un point d'échec unique (Single Point of Failure: SPoF) et plus facilement répondre aux pics d'activité.
+
+**Gestion de la capacité :** une cause courante de panne des charges de travail sur site est la saturation des ressources, lorsque les demandes ciblant une charge de travail en dépassent la capacité (c'est souvent l'objectif des attaques par déni de service). Dans le cloud, vous pouvez contrôler la demande et l'utilisation de la charge de travail. Vous pouvez aussi automatiser l'ajout ou la suppression de ressources afin de maintenir le niveau optimal de satisfaction de la demande sans sur-allocation ou sous-allocation.
+
+**Gérer les changements avec l'automatisation :** les modifications apportées à l'infrastructure doivent être appliquées via l'automatisation. Les modifications qui doivent être gérées incluent celles apportées à l'automatisation et qui peuvent ensuite être suivies et vérifiées. 
+
 ## 5. Infrastructure as Code
-### TP 2 : Passer d'un schéma d'architecture au déploiement de l'app
--> Apprendre à utiliser TF et 
+
+L'infrastructure as Code est une pratique permettant de déployer et gérer des ressources informatiques à travers des fichiers de configuration. On utilise ensuite des outils comme Terraform, AWS CloudFormation ou ARM chez Azure pour déployer ces fichiers et avoir un état identique entre nos fichier et nos ressources dans le Cloud. 
+
+### Avantages de l'Infrastructure as Code
+
+Les avantages principaux de l'Infrastructure as Code sont la réduction des coûts, la réduction des risques, la rapidité d'exécution et la collaboration avec votre équipe.
+
+L'IaC permet de déployer rapidement l'état défini dans les fichiers de configuration. Lorsque le déploiement est enclenché, il n'y a aucune intervention humaine donc on réduit fortement le risque d'erreur. Étant donné que le déploiement est automatisé par l'outil il permet aussi de déployer rapidement les ressources dans le Cloud, parfait pour des équipes de développement qui veulent tester de nouvelles fonctionnalités de leurs apps ou tout simplement lors d'une panne la restauration en est simplifiée. Le dernier point intéressant est la suppression des ressources à la volée lorsqu'elle ne sont plus utiles, idéal pour les entreprises qui souhaite économiser lors des périodes d'inactivité.
+
+L'utilisation de l'Infrastructure as Code aide à limiter les risques liés aux déploiements mal gérés en entreprise. En cas d'erreur lors d'un déploiement, il est facile de revenir en arrière rapidement grâce au versioning du code de l'infrastructure, qui fonctionne de la même façon que le versioning de code d'un app. De cette manière, les problèmes lors d'une mise à jour de l'app ou d'un fix de bug peuvent être résolus rapidement. En conséquence, les défauts logiciels sont moins susceptibles de persister dans le code, ce qui réduit les risques qui y sont associés.
+
+Un dernier point, partiellement lié à la rapidité d'exécution et à la collaboration, concerne la reproductibilité : un même script peut être réutiliser en utilisant des variables, à déployer tous les environnements pour l'applicatif souhaité (production, préproduction, développement). Il est donc possible d'avoir des environnements totalement identiques sur le plan technique, et de tester en conditions réelles les applications déployées, sans perte de temps supplémentaire. 
+
+### Fonctionnement de Terraform
+
+Terraform est un outil d'Infrastructure as Code permettant de déployer une infrastructure dans le Cloud en l’occurrence AWS. Il existe des concurrents comme AWS CloudFormation ou Azure Ressource Manager. Terraform se présente sous la forme d'un outil en ligne de commande.
+
+Terraform utilise le principe de `providers` qui sont des plugins permettant d’interagir avec les cli ou sdk des Cloud providers. Dans notre cas nous utiliserons le provider `AWS`. Dans chaque dossier contenant une infrastructure terraform on trouveras un fichier `provider.tf`. 
+
+```tf
+provider.tf
+
+# Sélection du provider souhaité et de sa version
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+# Configuration du provider qui correspond au fichiers dans ~/.aws/
+provider "aws" {
+  region  = "eu-west-1"
+  profile = "default"
+}
+```
+
+Les quatres commande principales de terraform sont : 
+
+**terraform init :** Cette commande permet d'initialiser le répertoire courant comme contenant des fichiers de configuration de Terraform. C'est la première commande à taper elle permet aussi de télécharger les providers Terraform.
+
+**terraform plan :** Cette commande permet de visualiser les changement qui vont être opérés sur l'infrastructure.
+
+**terraform apply :** Cette commande permet de visualiser puis appliquer les changement qui vont être opérés sur l'infrastructure.
+
+**terraform destroy :** Cette commande permet de visualiser puis supprimer les changement qui vont être opérés sur l'infrastructure.
+
+### Créer une ressources dans terraform
+
+Maintenant que nous avons notre fichier provider et que nous connaissons les commandes de bases, il faut créer les premiers fichiers. Pour cela on va aller sur la documentation du registry Terraform correspondant à notre provider en l’occurrence AWS.
+
+> https://registry.terraform.io/providers/hashicorp/aws/latest
+
+Pour créer une ressource on va utiliser un fichier en `.tf`. On retrouvera souvent un fichier par type de ressource pour ne pas se mélanger donc par exemple : `ec2.tf`, `s3.tf` ou un fichier `main.tf` qui regroupe tout si vous le souhaitez mais ce n'est pas conseillé. Vous pouvez trier aussi par usage : `instance.tf`, `security.tf` ...
+
+
+Terraform comprend trois mots clés principaux :
+
+- resource : correspond à une ressource fourni par le provider 
+- variable : une variable défini qui nous permet de réutiliser des valeurs à travers nos fichiers .tf
+- output : permet d'afficher après l'exécution du déploiement des valeurs fournis par des ressources comme les ip publiques ou le dns du load balancer.
+
+Ici je vais créer un security group et 2 règles:
+
+```terraform
+# Je sélectionne la resource aws_security_group et lui affecter un nom et un vpc id trouvable dans la console
+resource "aws_security_group" "webserver_sg" {
+  name   = "sg_webserver_lucaserisset"
+  vpc_id = var.vpc_id
+}
+
+# Je peux créer cette ressource qui correspond à une règle dans le security group ou la créer à part comme ici
+resource "aws_vpc_security_group_egress_rule" "egress_any" {
+  # ici avec aws_security_group.webserver_sg.id je fais référence à la valeur .id que la ressource expose en output.
+  security_group_id = aws_security_group.webserver_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = -1
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
+  security_group_id = aws_security_group.webserver_sg.id
+
+  # Chaque valeur qu'on voit ici sont documentées dans la page dédié à la ressource
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+```
+
+### TP 2 : Déployer une infrastructure redondée et haute disponibilité avec Terraform
+
 (Jour 3)
 ### 4.3. Le pilier de la Sécurité
 ### 4.4. Services de sécurité d'AWS
 ### TP 2 : Suite, on ajoute de la sécurité
-
 ## 3. Le métier d'Architecte Cloud
 ### 3.1. C'est quoi le job d'un Architecte Cloud
 ### 3.2. Pas mal de politique quand même
