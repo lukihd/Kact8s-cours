@@ -35,6 +35,11 @@
   - [6. La sécurité dans le Cloud](#6-la-sécurité-dans-le-cloud)
     - [6.1. Le pilier de la Sécurité](#61-le-pilier-de-la-sécurité)
     - [6.2. Services de sécurité d'AWS](#62-services-de-sécurité-daws)
+      - [Gestion des Accès et Identités](#gestion-des-accès-et-identités)
+      - [Service de détection et de remédiation](#service-de-détection-et-de-remédiation)
+      - [Sécurité réseaux et protection des applications](#sécurité-réseaux-et-protection-des-applications)
+      - [Sécurisation des données](#sécurisation-des-données)
+      - [Conformité](#conformité)
     - [TP 2 : Suite, on ajoute de la sécurité](#tp-2--suite-on-ajoute-de-la-sécurité)
   - [7. Le métier d'Architecte Cloud](#7-le-métier-darchitecte-cloud)
     - [7.1. C'est quoi le job d'un Architecte Cloud](#71-cest-quoi-le-job-dun-architecte-cloud)
@@ -323,14 +328,122 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
 [TP2](./tp2/README.md)
 
 ## 6. La sécurité dans le Cloud
+
+La sécurité dans le Cloud fait référence aux bonnes pratiques, règles, contrôles et outils de cybersécurité pour protéger l'infrastructure, les données et les applications hébergés dans le Cloud. Chaque CSP peut vous fournir des outils de sécurité par le biais de services managés (Gestion des identités et accès, outils d'audit, firewall applicatifs, security groups,...). Dans le Cloud pas besoin de gérer la sécurité avec un niveau aussi bas que dans une infrastructure On Premise. En effet ici la sécurité du DataCenter donc physique est géré par le provider. La responsabilité de la sécurité réseau et du stockage est elle réparti entre le provider et son client. En effet le matériel (switch, firewall,...) est géré par le CSP donc sécurisé par le CSP mais l'interconnexion réseau entre vos ressources comme des VM reste de votre fait en tant que client car ça dépend de votre utilité. Pour le stockage même si le CSP va vous assurer l’intégrité de vos données et la non compromissions de celles-ci sur leurs disques cela dépend tout de même de votre choix de chiffrer vos données ainsi que comment vous les exposez à vos consommateurs (applications, utilisateurs,...). Un CSP ne sera pas responsable de votre mauvaise gestion des security group permettant à un attaquant de se propager entre vos machines ou s'il est capable de fuiter vos données client car vous n'avez pas chiffrer ces données. A l'opposé le CSP sera responsable si sur les disques décommissionnés vos données sont toujours présente dessus.
+
+Pour vous aider à appliquer de la sécurité sur vos infrastructure les CSP on donc recours à des services internes mais aussi externe par le biais d'entreprise spécialisées en solution de sécurité. Par exemple le CSP peut vous fournir un WAF (Web Application Firewall) pour protéger vos infrastructure des acteurs malveillant attaquant vos sites. Ces outils sont équipés de premières protections mais doivent être personnalisés en fonction de vos besoin et vous permettent d'assurer la sécurité de vos applicatifs. Cette fois-ci l'usage de service managés sont très conseillés voir obligatoire pour faire fonctionner vos comptes dans le Cloud (ex: IAM le service de gestion des droits et utilisateurs). 
+
 ### 6.1. Le pilier de la Sécurité
+
+Le pilier sécurité a pour objectif de vous démontrer comment utiliser le Cloud pour améliorer la sécurité de vos données, systèmes, et assets. Il vous accompagne dans la gestion de la Gouvernance de l'entreprise pour tirer les pleines capacités des outils d'analyse de votre CSP, la gestion des risques avec des outils de réplication multi-région de vos données ou encore les best practices sécurité de chaque services de votre CSP. Ce pilier sera autant utile aux Ingénieurs Sécurité, le RSSI, les Ingénieurs Cloud mais aussi votre SOC (Security Operational Center) et vos architectes logiciel.
+
+**Mettre en place une solide base pour le contrôle des identités :** Utiliser le principe du moindre privilège (donner uniquement les droits strictement nécessaire pour l'utilisateur, le service,...), centraliser la gestion des identités et faire un roulement dans les accès programmatiques des outils et utilisateurs au CSP.
+
+**Assurer la traçabilité :** Supervisez, alertez et contrôlez les actions et les modifications apportées à votre environnement en temps réel. Intégrez la collecte des journaux et des métriques aux systèmes pour effectuer des analyses et prendre des mesures automatiquement.
+
+**Appliquer la sécurité à toutes les niveaux du SI :** Faites de la défense en profondeur, c'est à dire identifier et sécuriser chaque composants de votre SI de façon indépendante. Avec cette méthode on applique un maximum de sécurité sur chaque composants du SI : sous-réseaux, application, services managés, chaque instances, chaque disques. Chacun des composants de votre SI doit être sécurisé sans faire confiances aux composants autour de lui. 
+
+Exemple : On ne peut pas se fier à ce que la connexion entre la DB et une Instance sera sécurisé juste parce-que la base de données a un mot de passe et que la VM est sur un subnet non connecté à internet. Il faut que les deux instances ne puissent se parler qu'entre elles et que la communication soit chiffrée ce qui éliminera le risque d'une attaque "man in the middle" qui permet à un attaquant de récupérer les communications entre 2 VM.
+
+**Automatiser les bonnes pratiques en matière de sécurité :** Automatiser les tests de sécurité sur votre application ou l'Infrastructure as Code depuis vos pipelines CI/CD de votre Git. Automatisez les mises à jours de sécurité sur vos serveurs et les backup/réplications de vos données.
+
+**Protéger les données in transit et at rest :** Chiffrez vos données. Qu'elles soient en transit entre deux machines par l'utilisation d'un certificat TLS ou lorsqu'elles sont sur un espace de stockage (disque, stockage blob,...) avec des clés de chiffrement. La fuite de données impacte la réputation de votre entreprise et surtout vous car VOUS êtes le seul métier avec la capacité de chiffrer ces données et empêcher ce genre d'attaques.
+
+**Éviter les interventions humaines sur les données :** Utilisez des mécanismes et outils pour réduire ou éliminer le besoin d'accès direct ou le traitement manuel des données. Cette approche permet de réduire les risques de mauvaise manipulation ou de modification ainsi que les erreurs humaines lors d'interventions sur des données sensibles.
+
+**Se préparer aux incidents de sécurité :** Préparez-vous à un incident en mettant en œuvre une stratégie et des processus de gestion et d'investigation des incidents. Exécutez des exercices de réponse aux incidents et utilisez des outils d'automatisation et monitoring pour améliorer votre vitesse de détection, d'investigation et de récupération.
+
 ### 6.2. Services de sécurité d'AWS
+
+#### Gestion des Accès et Identités
+
+Sur chaque infrastructure Cloud vous devrez avoir une porte d'entrée avec un utilisateur. Sur AWS cette porte se présente sous la forme de 2 services : Identity Center (Le SSO qui permet de gérer les droits de façon centralisé avec un Active directory par exemple) et Identity & Access Management (IAM)
+
+**IAM :** C'est l'outil de gestion de droits et des identités que vous retrouverez chez tous les CSP. En l’occurrence sur AWS il vous permet de gérer les utilisateurs, groupes et rôles auxquels vous définirez des droits par le biais de policies (politiques de sécurité).
+
+Sur AWS on retrouve 2 types d'identités :
+
+**user :** Un utilisateur est une identité qui peut avoir un accès à la console ou un accès programmatique et qui peut être accédé par le biais d'un mot de passe ou de clés d'accès. Un utilisateur est souvent humain ou un compte de services utilisé par un logiciel pour manipuler des ressources AWS.
+
+**role :** Un role est une identité qui est assumée/endossée par un utilisateur pour avoir accès à des droits sur des ressources AWS et les manipuler. Il ne détient pas de mot de passes ou clés mais contient une policy définissant qui peut l'endosser.
+
+En général sur AWS on a un compte AWS dédié à la gestion des accès qui va concentrer tous les utilisateurs de l'infrastructure. Soit par le biais d'un SSO, Active Directory ou directement sur IAM. Ces utilisateurs vont ensuite vouloir se déplacer sur un autre compte et pour ça ils vont assumer un rôle présent sur ce compte et pouvoir manipuler les ressources. Un utilisateur ne permet pas de se déplacer entre les comptes alors on utilise des roles. Cela permet aussi d'appliquer le principe de moindre privilège pour limiter l'utilisateur dans ses droits sur certains comptes. Exemple on ne veut pas qu'un développeur puisse modifier de la production mais modifier l'environnement de développement oui donc il aura un role ReadOnly sur le compte de production et un role de Développeur sur le compte de développement.
+
+![image](images/iam_example.jpg)
+
+#### Service de détection et de remédiation
+
+**Amazon GuardDuty :** AWS GuardDuty est un service de détection de menaces managé qui analyse continuellement les logs et le trafic réseau des comptes AWS, identifiant ainsi les comportements suspects ou malveillants pour renforcer la sécurité des environnements cloud.
+
+**Amazon Inspector :** Inspector est outil qui permet d'analyser les vulnérabilités dans les conteneurs et les VM. Il détecte les CVE (Common Vulnerability and Exposure) qui correspondent à des failles de sécurité dans des packages Linux, npm, Windows,... Grâce à cet outil vous pouvez savoir si votre serveur est vulnérable à une faille de sécurité et si vous pouvez la corriger. Parfait pour de la veille, couplé avec d'autre service il est possible de remédier automatiquement les packets avec des failles.
+
+**AWS Config :** AWS Config est un service qui permet de suivre les configurations des ressources AWS et de détecter les écarts par rapport aux règles définies, offrant ainsi une visibilité et un contrôle continus sur l'état des ressources et leur conformité aux meilleures pratiques de sécurité.
+
+**AWS CloudTrail :** AWS CloudTrail est un service qui permet de suivre et d'enregistrer les activités des comptes AWS, offrant une visibilité détaillée sur les actions effectuées, les ressources utilisées et les modifications apportées, afin de garantir la conformité, la sécurité et la traçabilité des opérations dans l'environnement cloud AWS.
+
+**AWS CloudWatch :** AWS CloudWatch est un service de monitoring et de gestion des ressources AWS, permettant de collecter, de visualiser et d'analyser les données de performance et les journaux d'activité, ainsi que de déclencher des actions automatiques en réponse à des événements, offrant ainsi une supervision proactive et des alertes personnalisables pour garantir la disponibilité et les performances des applications dans le cloud AWS.
+
+#### Sécurité réseaux et protection des applications
+
+**AWS Firewall Manager :** AWS Firewall Manager est un service qui permet de gérer les règles de pare-feu dans plusieurs comptes et régions AWS, facilitant ainsi la mise en place de politiques de sécurité cohérentes et centralisées pour protéger les ressources cloud, et assurant ainsi une conformité aux normes de sécurité et une gestion simplifiée des politiques de sécurité dans un environnement AWS distribué.
+
+**AWS Network Firewall :** AWS Network Firewall est un service managé qui fournit un pare-feu réseau évolutif et hautement disponible pour protéger les ressources dans un VPC AWS. Il offre un contrôle granulaire sur le trafic entrant et sortant, ainsi que des fonctionnalités avancées de surveillance et de gestion des menaces pour renforcer la sécurité des applications déployées dans le cloud AWS.
+
+**AWS WAF :** AWS WAF est un service de pare-feu d'application web qui permet de contrôler et de filtrer le trafic HTTP/HTTPS entrant vers des applications web hébergées sur AWS, en protégeant contre les attaques courantes telles que les injections SQL, les attaques XSS et les attaques par déni de service distribué (DDoS), grâce à des règles personnalisables et à des deny list de bot et d'IP connus avec des règles prédéfinies.
+
+#### Sécurisation des données
+
+**AWS Key Management Service (KMS) :** AWS Key Management Service (KMS) est un service de gestion des clés de chiffrement qui permet de créer, de contrôler et de gérer facilement les clés de chiffrement utilisées pour protéger les données dans les services AWS et les applications. Il offre une gestion centralisée des clés, une intégration transparente avec d'autres services AWS, et permet de répondre aux exigences de conformité en matière de sécurité des données.
+
+**AWS Certificate Manager :** AWS Certificate Manager (ACM) est un service qui simplifie le processus de gestion des certificats SSL/TLS pour les ressources déployées sur AWS, offrant des certificats gratuits et gérés automatiquement, une intégration transparente avec les services AWS, et permettant de sécuriser les communications HTTPS de manière fiable et évolutive.
+
+**AWS CloudHSM :** AWS CloudHSM est un service de sécurité qui fournit des modules matériels de sécurité (HSM) dédiés pour stocker et gérer les clés de chiffrement de manière sécurisée dans le cloud AWS, offrant ainsi un contrôle total sur les clés sensibles, une conformité aux normes de sécurité et une protection renforcée des données sensibles contre les accès non autorisés.
+
+**AWS Secret Manager :** AWS Secret Manager est un service de gestion sécurisée des secrets, permettant de stocker, de gérer et de récupérer facilement des informations sensibles telles que des clés d'API, des mots de passe et des certificats, offrant ainsi une solution centralisée et sécurisée pour la gestion des secrets dans les applications déployées sur AWS.
+
+**Amazon Macie :** Amazon Macie est un service de sécurité qui utilise le machine learning pour identifier, classer et protéger les données sensibles dans les environnements AWS, offrant une visibilité et un contrôle sur les données sensibles, les activités anormales et les menaces potentielles, afin de renforcer la conformité et la sécurité des données dans le cloud AWS.
+
+#### Conformité
+
+**AWS Artifact :** AWS Artifact est un service qui fournit un accès sécurisé aux documents de conformité AWS, tels que les rapports d'audit, les attestations de conformité et les certifications de sécurité, permettant aux clients d'obtenir facilement et en toute confiance les informations nécessaires pour répondre à leurs exigences de conformité et de réglementation dans le cloud AWS.
+
+**AWS Audit Manager :** AWS Audit Manager est un service qui automatise et simplifie le processus de gestion des audits de conformité dans AWS, permettant aux entreprises de collecter, de gérer et de gérer efficacement les preuves d'audit pour répondre aux exigences de conformité réglementaire et aux meilleures pratiques de sécurité.
+
 ### TP 2 : Suite, on ajoute de la sécurité
 ## 7. Le métier d'Architecte Cloud
 ### 7.1. C'est quoi le job d'un Architecte Cloud
+
+Un Architecte Cloud est un métier de l'IT spécialiser dans le Cloud. Architecte est un métier qu'on retrouve dans beaucoup de spécialité en informatique (Développement, Réseau, Infrastructure, Cloud,...). Ce métier est souvent une évolution du métier d'ingénieur qui lui correspond. Ici l'architecte Cloud est majoritairement un Ingénieur Cloud Senior qui devient Architecte Cloud. Il est assez commun que l'Architecte Cloud soit aussi le team lead des ingénieurs Cloud, il aura donc de la gestion de projet et de ses équipes dans son éventail de compétences.
+
+L'Architecte Cloud est responsable de la stratégie Cloud de l'entreprise. Il a donc pour mission de designer les infrastructures Cloud, le design d'application cloud-native, les stratégies de monitoring et surtout de l'adoption du cloud par l'entreprise et ses produits.
+
+**Adoption du Cloud :** L'Architecte a pour objectif de faire migrer et d'accompagner les produits qui ne sont pas dans le cloud tout au long de leur cycle de vie (et de continuer avec celle déjà dans le Cloud). L'adoption du cloud est un changement radicale dans la stratégie d'entreprise et requiert un changement de paradigme de développement des applicatifs et des infrastructures. Un dernier aspect est aussi que l'Architecte doit être capable de communiquer facilement avec le CSP afin de faire comprendre ses besoins et trouver les solutions les plus adaptées.
+
+**Design d'infrastructure Cloud-native :** Après l'adoption du Cloud l'Architecte doit initier le processus de migration en proposant des schémas d'architecture de l'infrastructure qui soutiendra l'app mais aussi de comment l'application interagira avec les services du CSP (Gestion des accès, connexion aux DB ou services de stockage,...). Ces schéma sont réalisés pour permettre aux différentes parties prenantes du projet de comprendre comment l'application fonctionnera dans le Cloud.
+
+**Monitoring du Cloud en fonction des KPI :** L'architecte étant plus près des managers, il a aussi la responsabilité de rendre compte de l'état de l'infrastructure (coût, performance, taux de risque sécurité,...) et doit donc monitorer l'infrastructure en fonction des KPI définis avec son management et ses équipes. 
+
+Un autre role de l'architecte c'est aussi la veille, il doit toujours être au courant des dernières sorties du CSP pour étudier si il est intéressant d'intégrer à son infrastructure ces nouveaux composants. Mais surtout il devra rédiger des Proof Of Concept ou PoC qui serviront de prototypes à de nouveaux projet et en ressortir un compte rendu de l'état de celui-ci. Aucun projet ne peut commencer sans un PoC et un compte rendu ou vous créerai de la dette technique 5 ans plus tard qui seront difficilement rattrapable.
+
 ### 7.2. Pas mal de politique quand même
+
+Dans ce métier la politique fait partie du quotidien. Quand on commence à parler à des managers et d'objectifs de son équipe au sens large il y aura des débats entre architectes et managers sur les choix architecturaux et des compromis devront être fait dans chaque parties prenantes du projet. C'est très présent dans les grands groupes notamment dû à l'historique des infrastructures et usages. Il faut donc être prêt à vendre ses schémas et projets sans se laisser marcher sur les pieds et garder l'intégrité du projet tout en ayant des deadlines cohérentes. C'est une partie du métier qu'on apprend pas à l'école et qui est souvent négligé mais très importante.
+
 ### 7.3. Et t'es payé combien ?
+
+Toujours en prenant compte de l’excellent article [Les salaires de la tech par Denis Germain](https://blog.zwindler.fr/2024/01/05/salaires-dans-la-tech-quelques-ressources-externes-2023-2024/), on peut estimer que l'Architecte Cloud gagne autour de 60 à 70k € par an au bout de 10 ans de carrière. Il faut garder en tête que vous pourriez être architecte à 26 ans et vous auriez un gap de salaire important en tant qu'ingé cloud qui devient architecte mais vous ne serez peut être pas à 60k. En effet votre salaire dans la tech est plus lié au nombre d'entreprises que vous avez fait (des bonds de salaire entre elles) mais surtout vos années d'expériences dans le domaine. En tant qu'alternant vous avez la chance de commencer avec quelques années d'expériences même si malheureusement *beaucoup de recruteurs* vous diront que ça ne compte pas. **N'en tenez pas compte c'est une grande force !**
+
 ### 7.2. Les outils de l'Architecte Cloud
+
+Les outils principaux de l'architecte Cloud sont donc les suivants :
+
+**The Well-Architected Framework :** Le Well-Architected Framework, est utilisé autant par l'Ingénieur Cloud que l'Architecte Cloud puisqu'il recense toutes les bonnes pratiques d'un Cloud Provider et de l'utilisation de ses services. Toutefois pour l'Architecte il est primordial qu'il applique chaque pilier et qu'il les connaisse. Son rôle est aussi de conseiller les équipes dans l'adoption et doit répondre à ses supérieurs en cas de problème il lui incombe donc plus de responsabilité que le Well-Architected Framework peut aider à solutionner. Il est donc son outils principal.
+
+**Une suite documentaire :** La suite Google, Microsoft 365, peu importe mais vous allez devoir travailler souvent sur des classeurs (Sheets/Excel) pour de l'analyse de coût/performance, des document (Docs/Word) pour rédiger des document d'architecture ou des comptes rendus par exemple ou encore des diapositives (Slides/PowerPoint) pour présenter aux équipes/management les architectures et les proposition d'évolutions de l'infrastructure par exemple.
+
+**Un outil de schématisation :** Le plus connu reste Draw.io qui est un outil de visualisation et de création de schéma en tout genre : Architecture Cloud (AWS, Azure, GCP), Schéma réseaux, de bâtiments ou même des UML et des processus. Cet outil quel qu'il soit devra être maîtrisé pour proposer rapidement des schémas de vos nouveaux produits ou évolution de ceux-ci. Par exemple dans le cours tous les schémas sont réalisés selon les recommendations AWS sur Draw.io qui contient déjà des outils intégré (logos des services AWS, assets AWS,...) pour réaliser des schémas AWS.
+
+**Les outils de l'ingé cloud :** Évidement le dernier reste le CSP et toutes les technos utilisés par l'ingénieur Cloud. Vous gardez souvent la main sur l'infrastructure en renforçant vos équipes sur des sujets plus complexe dont vous avez l'expérience de gérer. Vous continuerai donc l'IaC, l'utilisation du CSP et surtout le Well-Architected Framework.
 
 ## 8 Comprendre un besoin client en tant qu'Architecte Cloud
 ### 8.1 Pilier sustainability
