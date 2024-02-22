@@ -60,6 +60,8 @@ On déploiera les services suivants :
 
 - 1 `load balancer applicatif` sur le port 80
   - un security group depuis internet vers le port 80 des EC2
+  - Subnets id : subnet-0e3b5a73eb879dbe8 -> eu-west-1a
+  - Subnets id : subnet-00c1a909f003623cf -> eu-west-1b
 - 1 `listener` sur le port 80 pour le load balancer
 - 1 `target_group` sur le port 80 lié automatiquement aux instances de l'autoscaling
 
