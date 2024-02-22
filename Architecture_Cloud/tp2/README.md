@@ -50,7 +50,7 @@ On déploiera les services suivants :
     - doit avoir une ip publique
     - doit être supprimée quand la vm est supprimée
   - security group a minima :
-    - attacher le security group de la DB : sg-04891020a5d7968f5
+    - attacher le security group de la DB : sg-0c37b0335fdf3d50d
     - une règle security group qui donne accès en inbound au loadbalancer
     - une règle security group qui donne accès en inbound en ssh depuis internet
 
