@@ -40,15 +40,16 @@
       - [Sécurité réseaux et protection des applications](#sécurité-réseaux-et-protection-des-applications)
       - [Sécurisation des données](#sécurisation-des-données)
       - [Conformité](#conformité)
-    - [TP 2 : Suite, on ajoute de la sécurité](#tp-2--suite-on-ajoute-de-la-sécurité)
   - [7. Le métier d'Architecte Cloud](#7-le-métier-darchitecte-cloud)
     - [7.1. C'est quoi le job d'un Architecte Cloud](#71-cest-quoi-le-job-dun-architecte-cloud)
     - [7.2. Pas mal de politique quand même](#72-pas-mal-de-politique-quand-même)
     - [7.3. Et t'es payé combien ?](#73-et-tes-payé-combien-)
     - [7.2. Les outils de l'Architecte Cloud](#72-les-outils-de-larchitecte-cloud)
-  - [8 Comprendre un besoin client en tant qu'Architecte Cloud](#8-comprendre-un-besoin-client-en-tant-quarchitecte-cloud)
-    - [8.1 Pilier sustainability](#81-pilier-sustainability)
-    - [8.2 Pilier finops](#82-pilier-finops)
+  - [8 Les piliers d'architecture](#8-les-piliers-darchitecture)
+    - [8.1 Pilier Cost Optimization](#81-pilier-cost-optimization)
+    - [8.2 Pilier Performance Efficiency](#82-pilier-performance-efficiency)
+    - [8.3 Pilier Sustainability](#83-pilier-sustainability)
+  - [9. Répondre à un besoin client](#9-répondre-à-un-besoin-client)
     - [TP 3 : Répondre à une besoin client en tant qu'Architecte et fournir une solution technique à ce besoin](#tp-3--répondre-à-une-besoin-client-en-tant-quarchitecte-et-fournir-une-solution-technique-à-ce-besoin)
 
 (Jour 1)
@@ -150,7 +151,7 @@ S3 : Simple Storage Service est un des plus vieux d'AWS, il vous permet de stock
 
 Les VM ici appelée par le service EC2 : Elastic Compute Cloud est le service le plus utilisé de la plateforme et un service que vous retrouverez chez n'importe quel provider. Il permet aux utilisateurs de louer des ressource de compute (ram, cpu, i/o) sur demande, ce qui leur permet de créer et de gérer des instances de serveurs virtuels dans le cloud. EC2 offre une flexibilité exceptionnelle en termes de choix de système d'exploitation, de type d'instance et de capacité de calcul, permettant aux utilisateurs de dimensionner rapidement leurs ressources en fonction de leurs besoins.
 
-En le couplant avec d'autre services comme l'autoscaling on est capable de déployer des machines en fonction du traffic sur l'application ou les ressources consommées par la VM. Il a aussi un intégration étroite avec un grand panel de services comme S3 ou d'autre dont on parlera plus tard qui étant et permet aux applications d'être bien plus performantes.
+En le couplant avec d'autre services comme l'autoscaling on est capable de déployer des machines en fonction du trafic sur l'application ou les ressources consommées par la VM. Il a aussi un intégration étroite avec un grand panel de services comme S3 ou d'autre dont on parlera plus tard qui étant et permet aux applications d'être bien plus performantes.
 
 #### 2.2.2. Conteneurs
 
@@ -409,7 +410,6 @@ En général sur AWS on a un compte AWS dédié à la gestion des accès qui va 
 
 **AWS Audit Manager :** AWS Audit Manager est un service qui automatise et simplifie le processus de gestion des audits de conformité dans AWS, permettant aux entreprises de collecter, de gérer et de gérer efficacement les preuves d'audit pour répondre aux exigences de conformité réglementaire et aux meilleures pratiques de sécurité.
 
-### TP 2 : Suite, on ajoute de la sécurité
 ## 7. Le métier d'Architecte Cloud
 ### 7.1. C'est quoi le job d'un Architecte Cloud
 
@@ -439,15 +439,73 @@ Les outils principaux de l'architecte Cloud sont donc les suivants :
 
 **The Well-Architected Framework :** Le Well-Architected Framework, est utilisé autant par l'Ingénieur Cloud que l'Architecte Cloud puisqu'il recense toutes les bonnes pratiques d'un Cloud Provider et de l'utilisation de ses services. Toutefois pour l'Architecte il est primordial qu'il applique chaque pilier et qu'il les connaisse. Son rôle est aussi de conseiller les équipes dans l'adoption et doit répondre à ses supérieurs en cas de problème il lui incombe donc plus de responsabilité que le Well-Architected Framework peut aider à solutionner. Il est donc son outils principal.
 
-**Une suite documentaire :** La suite Google, Microsoft 365, peu importe mais vous allez devoir travailler souvent sur des classeurs (Sheets/Excel) pour de l'analyse de coût/performance, des document (Docs/Word) pour rédiger des document d'architecture ou des comptes rendus par exemple ou encore des diapositives (Slides/PowerPoint) pour présenter aux équipes/management les architectures et les proposition d'évolutions de l'infrastructure par exemple.
+**Une suite documentaire :** Google Workspace ou Microsoft 365, peu importe mais vous allez devoir travailler souvent sur des classeurs (Sheets/Excel) pour de l'analyse de coût/performance, des document (Docs/Word) pour rédiger des document d'architecture ou des comptes rendus par exemple ou encore des diapositives (Slides/PowerPoint) pour présenter aux équipes/management les architectures et les proposition d'évolutions de l'infrastructure par exemple.
 
 **Un outil de schématisation :** Le plus connu reste Draw.io qui est un outil de visualisation et de création de schéma en tout genre : Architecture Cloud (AWS, Azure, GCP), Schéma réseaux, de bâtiments ou même des UML et des processus. Cet outil quel qu'il soit devra être maîtrisé pour proposer rapidement des schémas de vos nouveaux produits ou évolution de ceux-ci. Par exemple dans le cours tous les schémas sont réalisés selon les recommendations AWS sur Draw.io qui contient déjà des outils intégré (logos des services AWS, assets AWS,...) pour réaliser des schémas AWS.
 
 **Les outils de l'ingé cloud :** Évidement le dernier reste le CSP et toutes les technos utilisés par l'ingénieur Cloud. Vous gardez souvent la main sur l'infrastructure en renforçant vos équipes sur des sujets plus complexe dont vous avez l'expérience de gérer. Vous continuerai donc l'IaC, l'utilisation du CSP et surtout le Well-Architected Framework.
 
-## 8 Comprendre un besoin client en tant qu'Architecte Cloud
-### 8.1 Pilier sustainability
-### 8.2 Pilier finops
+## 8 Les piliers d'architecture
+### 8.1 Pilier Cost Optimization
+
+L'optimisation du coût d'une ressource implique qu'elle utilise pleinement les capacités qu'on lui offre pour un prix le plus abordable possible tout en matchant les minimum requirement. Ce pilier a pour but de vous guider dans la réduction des coût de votre infrastructure car la facture dans le Cloud peut vite dégénérer si l'optimisation est mal gérée. Une branche de métier existe désormais, spécialisé dans ce domaine, les FinOps.
+
+**Mettez en œuvre la gestion financière du cloud :** L'idée principale du Cloud c'est d'accélérer la croissance des produits et donc la rentabilité qui vient avec. Mais pour cela il faut investir dans le Cloud par des compétences, des formations, et des ressources humaines spécialisées dans le domaine. C'est seulement en suivant ce chemin que votre entreprise peut devenir plus efficace dans la gestion de ses coûts. 
+
+**Adopter un modèle de consommation :** Ne payer que pour ce dont vous avez besoin. Le `pay as you go` est le modèle phare du Cloud mais il existe aussi d'autre modèle parfois plus économique comme la réservation d'instances sur 2 ou 3 ans qui vous permet d'économiser plusieurs mois de coût des ressources. Toutefois vous devez gardez en tête qu'avec ce modèle si vous n'utilisez pas les ressources réservées vous les paierais quand même. Aussi éteignez vos machines si elles ne sont pas utilisées ou baisser le nombre nécessaire lors des périodes de trafic plus bas.
+
+**Mesurer l'efficacité globale :** Mesurez l'impact sur le business de chaque workload, chaque ressources sur les coûts du quotidien (création, maintenance, livraison). Grâce à ces mesures vous serez capable de comprendre les gains que vous faites en améliorant des fonctionnalités, améliorant la valeur de la machine et en réduisant ses coûts.
+
+**Analysez et répartissez les dépenses :** Grâce à la nature du Cloud qui permet de connaître le coût de chaque service, il est plus facile d'identifier quels projets coûtent combien. Vous pouvez donc optimiser vos coûts répartissant entre les équipes la charge financière associé à leurs projets. 
+
+### 8.2 Pilier Performance Efficiency
+
+Utilisez les données récupérés grâce aux autre piliers afin de concevoir des infrastructure haute performance. Du schéma d'architecture au choix du type d'instances, vous devez par le biais de ces données être capable de produire une infrastructure la plus performante possible. Il faudra faire des compromis sur l'architecture de l'infrastructure pour améliorer les performances avec l'utilisation de cache ou compression et être plus souple sur certains aspects de sécurité ou financiers.
+
+**Démocratiser les technologies avancées :** Utilisez les outils plus avancés fourni par le CSP pour vous simplifier la mise en place et la maintenance du produit. Plutôt que d'apprendre à gérer une nouvelle technologie utilisez plutôt un service managé qui vous délaisse de la maintenance opérationnelle pour vous concentrer sur le développement de nouveaux produits. 
+
+**Une envergure mondiale en quelques minutes :** Déployez vos ressources à travers le monde pour profiter de l'implémentation mondiale du CSP. Si vous avez des clients en Asie, considérez l'utilisation de ressources proche de vos utilisateurs ou de solutions qui permettent un trafic rapide entre l'Asie et l'Europe.
+
+**Utiliser des architectures serverless :** Utiliser du serverless c'est à dire développer une application cloud-native qui va utiliser les fonctions (Lambda), des gateway API fournis par le CSP afin de réduire la latence et accroître la performance mais ça a un coût ! Par exemple vous pouvez convertir un site web en utilisant des technologies serverless pour le web et donc ne plus avoir de serveurs ou conteneurs à gérer.
+
+**Expérimenter plus fréquemment :** Expérimenter plus souvent de nouvelles technologies. Cela vous permettra d'avoir une meilleure vision des services proposés par le CSP et de mieux définir vos futures architectures.
+
+**Envisager la « sympathie mécanique » :** Sélectionner du matériel adapté à vos besoin comme par exemple choisir une instance dédié aux bases de données pour une DB ou une instance avec un GPU pour des workload de DeepLearning.
+
+### 8.3 Pilier Sustainability
+
+La pilier Sustainability ou développement durable (durabilité) en français traite des répercussions environnementales, économiques et sociétales à long terme de vos activités commerciales. La Commission mondiale sur l'environnement et le développement des Nations Unies définit le développement durable comme « un développement qui répond aux besoins du présent sans compromettre la capacité des générations futures à satisfaire les leur ». Votre entreprise ou organisation peut avoir des impacts environnementaux négatifs, tels que des émissions carbone directes ou indirectes, des déchets non recyclables et des dommages causés aux ressources partagées comme l'eau potable.
+
+Lorsque des ressources sont créées dans le cloud, le pilier Sustainability permet de comprendre les impacts des services utilisés, mesurer les impacts tout au long du cycle de vie de la ressource dans son ensemble et appliquer des principes d'Architecture et de bonnes pratiques afin de réduire ces impacts. Ce pilier se concentre sur les impacts environnementaux, notamment la consommation et l'efficacité énergétiques, qui sont des leviers importants permettant aux architectes de recueillir des informations sur les actions directes afin d'utiliser moins de ressources. 
+
+**Déterminer votre impact :** Mesurez l'impact de vos ressources dans le cloud et modélisez l'impact futur de vos workload. Incluez toutes les sources d'impact, y compris les impacts résultant de l'utilisation de vos produits par les clients, et ceux découlant de leur éventuelle mise hors service. Comparez le rendement productif à l'impact total de vos workload sur le cloud en évaluant les ressources et les émissions nécessaires par unité de travail. Utilisez ces données pour établir des indicateurs clés de performance (KPI), évaluer des moyens d'améliorer la productivité tout en réduisant l'impact et estimer l'impact des changements proposés au fil du temps. 
+
+**Définir des objectifs de durabilité :** Pour chaque ressources dans le cloud, établissez des objectifs de durabilité à long terme, tels que la réduction des ressources de calcul et de stockage nécessaires par opérations. Modélisez le retour sur investissement des améliorations durables pour les workload existants et donnez aux équipes les ressources dont ils ont besoin pour investir dans leurs objectifs de durabilité. Planifiez en vue d'une croissance et concevez l'architecture afin que la croissance entraîne une intensité de l'impact moindre mesurée par rapport à une unité appropriée, par utilisateur ou par transaction par exemple. Les objectifs vous aident à soutenir les objectifs de développement durable plus larges de votre entreprise ou organisation, identifier les régressions et privilégier les zones pouvant être améliorées. 
+
+**Optimiser l'utilisation des ressources :** Dimensionnez correctement les ressources et intégrez une conception efficace pour assurer une forte utilisation et optimiser l'efficacité énergétique du matériel sous-jacent (et optimiser les coûts). Deux hôtes s'exécutant à 30 % de leur utilisation sont moins efficaces qu'un seul hôte s'exécutant à 60 % du fait de la consommation énergétique de base par hôte. Éliminez ou minimisez également les ressources, le traitement et le stockage inactifs afin de réduire l'énergie totale nécessaire pour alimenter votre charge de travail. 
+
+**Anticiper et adopter des offres matérielles et logicielles neuves et plus efficaces :** Contrôlez et évaluez de façon continue des offres matérielles et logicielles neuves et plus efficaces. Concevez de manière flexible afin de permettre l'adoption rapide de nouvelles technologies efficaces. L'exemple parfait c'est la croissance sur le marché des processeurs ARM qui deviennent très puissant voir plus puissant qu'une architecture amd64. On le voit notamment chez AWS avec leurs processeurs `graviton` qui en plus d'être moins cher sont bien plus puissant que les processeur qu'on peut retrouver sur des types d'instances standards
+
+
+## 9. Répondre à un besoin client
+
+Le meilleur moyen pour répondre à un besoin client c'est de suivre les étapes suivantes :
+
+1. Décortiquer le sujet en retenant les mots clés du document et les points sur lesquels le client insiste. Ces points sont votre priorité et ce sur quoi le client vous attend lors de votre proposition.
+
+2. Les exigences du Client s'intègrent toujours dans un contexte. Et vous devez toujours suivre ce contexte et vous demander si vos propositions vont dans le sens du contexte sans quoi vous serez hors-sujet.
+
+3. Identifiez les besoins implicites qui ne sont pas explicitement mentionnés dans le sujet. Cela peut nécessiter de lire entre les lignes pour comprendre les attentes du client.
+
+4. Divisez le sujet écrit en éléments plus petits et plus gérables. Identifiez les différentes parties du sujet qui peuvent correspondre à des fonctionnalités distinctes ou à des aspects spécifiques du projet.
+
+5. Relevez toute ambiguïté ou toute information manquante dans le sujet écrit et cherchez à obtenir des éclaircissements auprès du client. Cela peut nécessiter des échanges de questions-réponses ou des réunions de clarification.
+
+6. Une fois que vous avez une compréhension initiale des besoins à partir du sujet écrit, discutez-en avec le client pour vous assurer que vous avez interprété correctement ses attentes. Cela peut aider à éviter les malentendus et les erreurs de communication. N'hésitez pas à le faire avant la date butoir de la présentation.
+
+7. Documentez soigneusement les exigences identifiées à partir du sujet écrit, en les décrivant de manière claire, concise et non ambiguë. Utilisez des outils tels que des diagrammes, schémas d'architecture, des listes de fonctionnalités ou des descriptions textuelles pour organiser les informations.
+
+8. Assurez-vous de maintenir une communication continue avec le client tout au long du processus d'analyse des besoins pour vous assurer que vous êtes sur la bonne voie et pour permettre des ajustements si nécessaire.
 
 ### TP 3 : Répondre à une besoin client en tant qu'Architecte et fournir une solution technique à ce besoin 
 
